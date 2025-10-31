@@ -1,29 +1,39 @@
 // server.js
+
+// --- Core Imports ---
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+
+// --- Custom Imports ---
 const connectDB = require('./config/db');
+const userRoutes = require('./routes/userRoutes');
+const uploadRoutes = require('./routes/uploadRoutes'); // <-- You needed this
 
-// --- Import your routes file ---
-const userRoutes = require('./routes/userRoutes'); 
-
+// --- Configuration ---
 dotenv.config();
-connectDB(); 
+connectDB(); // Connect to MongoDB
 
+// --- App Initialization ---
 const app = express();
 
-app.use(cors());
-app.use(express.json()); // This is crucial! It parses req.body
+// --- Core Middlewares ---
+app.use(cors()); // Enable Cross-Origin Resource Sharing
+app.use(express.json()); // To parse JSON request bodies
 
+// --- Test Route ---
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-// --- Tell Express to use the routes ---
-// Any URL starting with /api/users will be handled by 'userRoutes'
+// --- API Routes ---
+// Tell Express to use your route files
 app.use('/api/users', userRoutes);
+app.Wuse('/api/uploads', uploadRoutes); // <-- You needed this
 
+// --- Server Startup ---
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
